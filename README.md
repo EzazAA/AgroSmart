@@ -43,5 +43,3 @@ The AI model is currently being **improved and open-sourced on Hugging Face** (l
 - 📚 **Base Model Reference** – [SIMDS-Hydro](https://anubhavsc.github.io/SIMDS-Hydro)  
 
 ---
-
-This version improves readability, maintains professional consistency, and makes it more engaging. Let me know if you'd like any refinements! 🚀
