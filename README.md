@@ -42,4 +42,8 @@ The AI model is currently being **improved and open-sourced on Hugging Face** (l
 - 📶 **ESP32 WiFi Library** – [WiFi Library](https://github.com/arduino-libraries/WiFi)  
 - 📚 **Base Model Reference** – [SIMDS-Hydro](https://anubhavsc.github.io/SIMDS-Hydro)  
 
+### 📂 **related Repositories**
+- ⚪ **App** - [AroSmart-App](https://github.com/ezazaa/agrosmart-app)
+- ⚪ **Annadhaar** - [Annadhaar](https://github.com/ezazaa/Annadhaar)
+- ⚪ **Crop-Support** - [AroSmart-App](https://github.com/ezazaa/crop-support)
 ---
