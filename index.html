@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agro-Smart - Smart Agriculture IoT Solutions</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/lucide-icons@0.298.0/dist/umd/lucide.min.js"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="output.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Questrial&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#16a34a", // green-600
+              secondary: "#f0fdf4", // green-50
+            },
+            animation: {
+              ping: "ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite",
+              "fade-in": "fadeIn 0.5s ease-in-out",
+              "slide-up": "slideUp 0.5s ease-in-out",
+              "slide-down": "slideDown 0.5s ease-in-out",
+              "slide-left": "slideLeft 0.5s ease-in-out",
+              "slide-right": "slideRight 0.5s ease-in-out",
+              "grow-width": "growWidth 1.5s ease-in-out",
+            },
+            keyframes: {
+              ping: {
+                "0%": { transform: "scale(1)", opacity: "1" },
+                "75%, 100%": { transform: "scale(2)", opacity: "0" },
+              },
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { transform: "translateY(20px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              slideDown: {
+                "0%": { transform: "translateY(-20px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              slideLeft: {
+                "0%": { transform: "translateX(20px)", opacity: "0" },
+                "100%": { transform: "translateX(0)", opacity: "1" },
+              },
+              slideRight: {
+                "0%": { transform: "translateX(-20px)", opacity: "0" },
+                "100%": { transform: "translateX(0)", opacity: "1" },
+              },
+              growWidth: {
+                "0%": { width: "0%", opacity: "0" },
+                "100%": { width: "100%", opacity: "1" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .sensor-pulse {
+        position: relative;
+      }
+
+      .sensor-pulse::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border-radius: 9999px;
+        background-color: white;
+        animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .feature-card {
+        transition: all 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        animation-name: shadow;
+        animation-duration: 500ms;
+        animation-fill-mode: both;
+      }
+
+      @keyframes shadow {
+        0% {
+          box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        100% {
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+
+      .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .data-flow {
+        width: 0;
+        animation: growWidth 1.5s ease-in-out forwards;
+        animation-delay: 1.2s;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen flex flex-col font-font">
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+    >
+      <div
+        class="container mx-auto flex h-16 items-center justify-between px-4"
+      >
+        <div class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-6 w-6 text-green-600"
+          >
+            <path
+              d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+            ></path>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+          </svg>
+          <span class="text-xl font-bold">Agro-Smart</span>
+        </div>
+        <nav class="hidden md:flex gap-6">
+          <a
+            href="#features"
+            class="text-sm font-medium transition-colors hover:text-green-600"
+            >Features</a
+          >
+          <a
+            href="#about"
+            class="text-sm font-medium transition-colors hover:text-green-600"
+            >About</a
+          >
+          <a
+            href="#dashboard"
+            class="text-sm font-medium transition-colors hover:text-green-600"
+            >Get Started</a
+          >
+          
+        </nav>
+        <div class="flex items-center gap-4">
+          <button
+            onclick="toggleMenu()"
+            class="menuBtn md:hidden inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 bg-white p-0 text-sm font-medium shadow-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-6 w-6"
+            >
+              <line x1="4" x2="20" y1="12" y2="12"></line>
+              <line x1="4" x2="20" y1="6" y2="6"></line>
+              <line x1="4" x2="20" y1="18" y2="18"></line>
+            </svg>
+            <span class="sr-only">Toggle menu</span>
+          </button>
+        </div>
+      </div>
+      <nav
+        id="mobile-menu"
+        class="absolute top-16 left-0 z-50 hidden flex-col md:hidden w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+      >
+        <a
+          href="#features"
+          class="text-sm font-medium transition-colors hover:text-green-600 py-2 px-4 border-b"
+          >Features</a
+        >
+        <a
+          href="#about"
+          class="text-sm font-medium transition-colors hover:text-green-600 py-2 px-4 border-b"
+          >About</a
+        >
+        <a
+          href="#dashboard"
+          class="text-sm font-medium transition-colors hover:text-green-600 py-2 px-4 border-b"
+          >Get Started</a
+        >
+        
+      </nav>
+    </header>
+
+    <main class="flex-1">
+      <!-- Hero Section -->
+      <section
+        class="w-full py-12 md:py-24 lg:py-32 xl:py-20 bg-gradient-to-b from-white to-green-50"
+      >
+        <div class="container mx-auto px-4 md:px-6">
+          <div class="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
+            <div
+              class="flex flex-col justify-center space-y-4 animate-on-scroll"
+            >
+              <div class="space-y-2">
+                <h1
+                  class="text-5xl font-bold tracking-tight sm:text-5xl xl:text-6xl/none"
+                >
+                  Agro-Smart, Digitizing Farming
+                </h1>
+                <p class="max-w-[600px] text-gray-500 md:text-xl">
+                  Revolutionize your farming with our IoT solutions. Monitor,
+                  analyze, and optimize your agricultural operations.
+                </p>
+              </div>
+              <div class="flex flex-row xl:flex-col gap-2 min-[400px]:flex-row">
+                <a href="#dashboard" class="w-1/2 xl:w-auto">
+                  <button
+                    class="w-full inline-flex h-10 items-center justify-center rounded-md bg-green-600 text-sm font-medium text-white shadow transition-colors hover:bg-green-700"
+                  >
+                    Get Started
+                  </button>
+                </a>
+                <button
+                  class="inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 w-1/2 xl:w-auto"
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center justify-center">
+              <div
+                class="relative w-full max-w-[600px] h-[400px] animate-on-scroll"
+              >
+                <img
+                  src="Ezaz_Alam_Ahmed_An_photoof_a_wheat_feild_nad_full_of_greenery_and_f5bbbd0c-c4c5-4399-b61a-4eb15def26ba.png"
+                  alt="Smart farm with IoT sensors"
+                  class="rounded-lg shadow-xl w-full h-full object-cover z-10 relative"
+                />
+
+                <div
+                  class="absolute bottom-[10%] left-0 h-1 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 rounded-full data-flow"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="w-full py-12 md:py-24 lg:py-32 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+          <div
+            class="flex flex-col items-center justify-center space-y-4 text-center"
+          >
+            <div class="space-y-2">
+              <div
+                class="inline-block rounded-lg bg-green-100 px-3 py-1 text-sm text-green-800"
+              >
+                Features
+              </div>
+              <h2 class="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Comprehensive IoT Solutions for Agriculture
+              </h2>
+              <p class="max-w-[900px] text-gray-500 md:text-xl">
+                Our integrated system provides everything you need to monitor
+                and optimize your farm operations.
+              </p>
+            </div>
+          </div>
+          <div
+            class="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8"
+          >
+            <!-- Feature Card 1 -->
+            <div
+              class="feature-card animate-on-scroll flex flex-col items-center text-center rounded-xl border bg-white p-6 shadow-sm duration-100"
+            >
+              <div class="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-10 w-10 text-green-600"
+                >
+                  <path
+                    d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Smart Irrigation</h3>
+              <p class="text-gray-500">
+                Optimize water usage with soil moisture sensors and automated
+                irrigation systems.
+              </p>
+            </div>
+
+            <!-- Feature Card 2 -->
+            <div
+              class="feature-card animate-on-scroll flex flex-col items-center text-center rounded-xl border bg-white p-6 shadow-sm"
+              style="animation-delay: 0.1s"
+            >
+              <div class="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-10 w-10 text-amber-500"
+                >
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Climate Monitoring</h3>
+              <p class="text-gray-500">
+                Track temperature, humidity, and light levels to create ideal
+                growing conditions.
+              </p>
+            </div>
+
+            <!-- Feature Card 3 -->
+            <div
+              class="feature-card animate-on-scroll flex flex-col items-center text-center rounded-xl border bg-white p-6 shadow-sm"
+              style="animation-delay: 0.2s"
+            >
+              <div class="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-10 w-10 text-blue-600"
+                >
+                  <path d="M3 3v18h18"></path>
+                  <path d="M18 17V9"></path>
+                  <path d="M13 17V5"></path>
+                  <path d="M8 17v-3"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Data Analytics</h3>
+              <p class="text-gray-500">
+                Make informed decisions with advanced analytics and predictive
+                insights.
+              </p>
+            </div>
+
+            <!-- Feature Card 4 -->
+            <div
+              class="feature-card animate-on-scroll flex flex-col items-center text-center rounded-xl border bg-white p-6 shadow-sm"
+              style="animation-delay: 0.3s"
+            >
+              <div class="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-10 w-10 text-purple-600"
+                >
+                  <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                  <rect x="9" y="9" width="6" height="6"></rect>
+                  <path d="M15 2v2"></path>
+                  <path d="M15 20v2"></path>
+                  <path d="M2 15h2"></path>
+                  <path d="M20 15h2"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Smart Devices</h3>
+              <p class="text-gray-500">
+                Deploy rugged, low-power sensors and controllers throughout your
+                farm.
+              </p>
+            </div>
+
+            <!-- Feature Card 5 -->
+            <div
+              class="feature-card animate-on-scroll flex flex-col items-center text-center rounded-xl border bg-white p-6 shadow-sm"
+              style="animation-delay: 0.4s"
+            >
+              <div class="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-10 w-10 text-sky-500"
+                >
+                  <path
+                    d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2">AI Integration</h3>
+              <p class="text-gray-500">
+                Integration of AI Platform, Which can detect crop diseases
+                through text input.
+              </p>
+            </div>
+
+            <!-- Feature Card 6 -->
+            <div
+              class="feature-card animate-on-scroll flex flex-col items-center text-center rounded-xl border bg-white p-6 shadow-sm"
+              style="animation-delay: 0.5s"
+            >
+              <div class="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="h-10 w-10 text-gray-600"
+                >
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2">Automation</h3>
+              <p class="text-gray-500">
+                Set up automated workflows and alerts based on sensor data and
+                conditions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="w-full py-12 md:py-24 lg:py-32 bg-green-50">
+        <div class="container mx-auto px-4 md:px-6">
+          <div
+            class="flex flex-col items-center justify-center space-y-4 text-center"
+          >
+            <div class="space-y-2">
+              <div
+                class="inline-block rounded-lg bg-green-100 px-3 py-1 text-sm text-green-800"
+              >
+                About Us
+              </div>
+              <h2 class="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Transforming Agriculture with Technology
+              </h2>
+              <p class="max-w-[900px] text-gray-500 md:text-xl">
+                Learn about our mission and how we're helping farmers around the
+                world.
+              </p>
+            </div>
+          </div>
+          <div class="mx-auto max-w-5xl mt-8">
+            <!-- Tabs -->
+            <div class="flex justify-center mb-8">
+              <div
+                class="inline-flex h-10 items-center justify-center rounded-md bg-gray-100 p-1 text-gray-500"
+              >
+                <button
+                  class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-gray-900 shadow-sm"
+                  data-tab="mission"
+                >
+                  Special Thanks
+                </button>
+                <button
+                  class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                  data-tab="team"
+                >
+                  Links
+                </button>
+                <button
+                  class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                  data-tab="journey"
+                >
+                  Future
+                </button>
+              </div>
+            </div>
+
+            <div class="relative min-h-[400px]">
+              <!-- Mission Tab Content -->
+              <div class="tab-content active" id="mission-content">
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                  <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                      Sustainable Agriculture Through Technology
+                    </h3>
+                    <p class="text-gray-500 mb-4">
+                      We extend our heartfelt gratitude to everyone who has
+                      supported us throughout this project. First and foremost,
+                      we sincerely thank our school, PM SHRI KV Mangaldoi, for
+                      providing us with the platform and resources to explore
+                      innovation in agriculture. A special mention goes to our
+                      senior, Anubhav, whose guidance and valuable insights
+                      helped us refine our ideas and approach. We are deeply
+                      grateful to our teachers, Sumit Bansal and Somashri Kundu,
+                      for their constant encouragement, mentorship, and for
+                      instilling in us the passion for learning and
+                      problem-solving. Finally, we express our deepest
+                      appreciation to our parents for their unwavering support,
+                      motivation, and belief in our abilities. Without their
+                      encouragement, AgroSmart would not have been possible.
+                    </p>
+                  </div>
+                  <div class="flex justify-center">
+                    <img
+                      src="a-photograph-of-a-charming-red-brick-far_RqtnEghJQ1Khjr-xeeebiw_lhcD6QH-S3iTOZxCMYRaqQ.jpeg"
+                      alt="Sustainable farming"
+                      class="rounded-lg shadow-md"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Team Tab Content -->
+              <div class="tab-content" id="team-content">
+                <div class="flex gap-6 items-center">
+                  <div class="flex justify-center"></div>
+                  <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                      Important Links
+                    </h3>
+                    <div class="flex flex-col gap-4">
+                      <a href="https://www.fao.org/smart-agriculture" target="_blank" class="bg-green-600 text-white p-6 py-2 rounded-lg shadow-md hover:bg-green-700 transition">
+                        Download the app (For Android v9 or below)
+                      </a>
+                      <a href="https://annadhaar.vercel.app" target="_blank" class="bg-green-600 text-white p-6 py-2 rounded-lg shadow-md hover:bg-green-700 transition">
+                        Try the AnnadhaarAI
+                      </a>
+                      <a href="https://liza-as.vercel.app" target="_blank" class="bg-green-600 text-white p-6 py-2 rounded-lg shadow-md hover:bg-green-700 transition">
+                        Get support from LizaAI
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+              <!-- Journey Tab Content -->
+              <div class="tab-content" id="journey-content">
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                  <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                      From Idea to Global Impact
+                    </h3>
+                    <p class="text-gray-500 mb-4">
+                      The future of agriculture lies in automation, precision,
+                      and sustainability. With rapid advancements in AI, machine
+                      learning, and remote sensing, farms will soon operate with
+                      minimal manual intervention, optimizing yield while
+                      reducing environmental impact. Smart irrigation systems,
+                      autonomous machinery, and predictive analytics will
+                      transform how food is grown, making agriculture more
+                      resilient to climate change and resource limitations.
+                      AgroSmart is just a small step toward this vision, aiming
+                      to empower farmers with technology that enhances
+                      efficiency and profitability while preserving the
+                      environment. By embracing innovation today, we pave the
+                      way for a smarter, more sustainable future in agriculture.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="w-full py-12 md:py-24 lg:py-32 bg-white">
+        <div class="container mx-auto px-4 md:px-6">
+          <div
+            class="flex flex-col items-center justify-center space-y-4 text-center"
+          >
+            <div class="space-y-2">
+              <div
+                class="inline-block rounded-lg bg-green-100 px-3 py-1 text-sm text-green-800"
+              >
+                Dashboard
+              </div>
+              <h2 class="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Powerful Insights at Your Fingertips
+              </h2>
+              <p class="max-w-[900px] text-gray-500 md:text-xl">
+                Our intuitive dashboard gives you complete visibility and
+                control over your farm.
+              </p>
+            </div>
+          </div>
+          <div class="mx-auto max-w-6xl mt-8 animate-on-scroll">
+            <div class="rounded-xl border bg-white shadow-xl overflow-hidden">
+              <div
+                class="flex items-center justify-between border-b bg-gray-50 px-4 py-3"
+              >
+                <div class="flex items-center gap-2">
+                  <div class="h-2 w-2 rounded-full bg-red-500"></div>
+                  <div class="h-2 w-2 rounded-full bg-yellow-500"></div>
+                  <div class="h-2 w-2 rounded-full bg-green-500"></div>
+                </div>
+                <div class="text-sm font-medium">Agro-Smart Dashboard</div>
+                <div class="text-sm text-gray-500">Agro-smart Android App</div>
+              </div>
+
+              <div
+                class="flex flex-col xl:flex-row p-4 align-center justify-center items-center"
+              >
+                <img
+                  src="SS-1 (1).JPG"
+                  alt=""
+                  class="w-11/12 xl:w-1/4 m-1 rounded-md border"
+                />
+                <img
+                  src="SS-1 (4).JPG"
+                  alt=""
+                  class="w-11/12 xl:w-1/4 m-1 rounded-md border"
+                />
+                <img
+                  src="SS-1 (2).JPG"
+                  alt=""
+                  class="w-11/12 xl:w-1/4 m-1 rounded-md border"
+                />
+                <img
+                  src="SS-1 (3).JPG"
+                  alt=""
+                  class="w-11/12 xl:w-1/4 m-1 rounded-md border"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+    </main>
+
+    <footer class="w-full border-t bg-white py-6">
+      <div
+        class="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row px-4 md:px-6"
+      >
+        <div class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-6 w-6 text-green-600"
+          >
+            <path
+              d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+            ></path>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+          </svg>
+          <span class="text-xl font-bold">Agro-Smart</span>
+        </div>
+        <p class="text-center text-sm text-gray-500 md:text-left">
+          ©
+          <script>
+            document.write(new Date().getFullYear());
+          </script>
+          Agro-Smart. All rights reserved.
+        </p>
+        <div class="flex gap-4">
+          
+          <a href="#" class="text-gray-500 hover:text-gray-900">
+            <svg
+              xmlns="http://x.com/EAhmed7617"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5"
+            >
+              <path
+                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+              ></path>
+            </svg>
+            <span class="sr-only">Twitter</span>
+          </a>
+          <a href="https://instagram.com/ezazaa" class="text-gray-500 hover:text-gray-900">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5"
+            >
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+            </svg>
+            <span class="sr-only">Instagram</span>
+          </a>
+          <a href="https://www.linkedin.com/in/ezaz-alam-ahmed-a6700a2b6/" class="text-gray-500 hover:text-gray-900">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-5 w-5"
+            >
+              <path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              ></path>
+              <rect width="4" height="12" x="2" y="9"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+            <span class="sr-only">LinkedIn</span>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu
+      function toggleMenu() {
+        const menu = document.getElementById("mobile-menu");
+        menu.classList.toggle("hidden");
+        menu.classList.toggle("flex");
+      }
+      // Tab functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        // About section tabs
+        const tabButtons = document.querySelectorAll(".tab-button");
+        const tabContents = document.querySelectorAll(".tab-content");
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const tabId = button.getAttribute("data-tab");
+
+            // Remove active class from all buttons and contents
+            tabButtons.forEach((btn) => {
+              btn.classList.remove("bg-white", "text-gray-900", "shadow-sm");
+            });
+            tabContents.forEach((content) => {
+              content.classList.remove("active");
+            });
+
+            // Add active class to clicked button and corresponding content
+            button.classList.add("bg-white", "text-gray-900", "shadow-sm");
+            document.getElementById(`${tabId}-content`).classList.add("active");
+          });
+        });
+
+        // Dashboard tabs
+        const dashboardTabButtons = document.querySelectorAll(
+          ".dashboard-tab-button"
+        );
+        const dashboardTabContents = document.querySelectorAll(
+          ".dashboard-tab-content"
+        );
+
+        dashboardTabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const tabId = button.getAttribute("data-tab");
+
+            // Remove active class from all buttons and contents
+            dashboardTabButtons.forEach((btn) => {
+              btn.classList.remove("bg-white", "text-gray-900", "shadow-sm");
+            });
+            dashboardTabContents.forEach((content) => {
+              content.classList.remove("active");
+            });
+
+            // Add active class to clicked button and corresponding content
+            button.classList.add("bg-white", "text-gray-900", "shadow-sm");
+            document.getElementById(`${tabId}-content`).classList.add("active");
+          });
+        });
+
+        // Animation on scroll
+        const animatedElements =
+          document.querySelectorAll(".animate-on-scroll");
+
+        function checkScroll() {
+          animatedElements.forEach((element) => {
+            const elementTop = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+
+            if (elementTop < windowHeight - 100) {
+              element.classList.add("visible");
+            }
+          });
+        }
+
+        // Initial check
+        checkScroll();
+
+        // Check on scroll
+        window.addEventListener("scroll", checkScroll);
+      });
+    </script>
+  </body>
+</html>
